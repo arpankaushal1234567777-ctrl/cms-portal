@@ -348,7 +348,7 @@ export default function Dashboard({ initialProfile }) {
   }
 
   return (
-    <div className="container" style={{ padding: '40px 24px' }}>
+    <div className="container dashboard-container">
       <div className="dashboard-grid">
         {/* Left Column: Side Navigation & Student Profile */}
         <aside className="dashboard-sidebar animate-fade-in-up stagger-1">
