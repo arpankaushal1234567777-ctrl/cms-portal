@@ -52,7 +52,7 @@ export default function PortalsHub() {
             <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-primary)' }}>Important Note on Login Credentials</span>
           </div>
           <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-            Your **Samarth Portal** username is your official **Enrollment Number** (not your Roll Number) and uses a separate password you created during Samarth registration. For daily internal marks, continue using your **Roll Number** on this CMS portal dashboard.
+            Your <strong>Samarth Portal</strong> username is your official <strong>Enrollment Number</strong> (not your Roll Number) and uses a separate password you created during Samarth registration. For daily internal marks, continue using your <strong>Roll Number</strong> on this CMS portal dashboard.
           </p>
         </div>
       </div>
