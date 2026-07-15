@@ -574,3 +574,19 @@ body {
     font-size: 12px;
   }
 }
+
+/* Spinner border rotation animations */
+.spinner-border {
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  vertical-align: text-bottom;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

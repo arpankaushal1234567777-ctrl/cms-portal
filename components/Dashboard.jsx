@@ -230,6 +230,8 @@ export default function Dashboard({ initialProfile }) {
                 studentName={profile?.name}
                 rollNumber={profile?.rollNumber}
                 courseCode={selectedCourse}
+                courses={courses}
+                selectedSemester={selectedSemester}
               />
             </div>
           )}
