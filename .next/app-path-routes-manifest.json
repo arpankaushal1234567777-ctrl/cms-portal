@@ -1,0 +1,16 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/courses/route": "/api/courses",
+  "/api/admit-card/route": "/api/admit-card",
+  "/api/health/route": "/api/health",
+  "/api/change-password/route": "/api/change-password",
+  "/api/logout/route": "/api/logout",
+  "/api/login/route": "/api/login",
+  "/api/profile/route": "/api/profile",
+  "/api/registration-report/route": "/api/registration-report",
+  "/api/marks/route": "/api/marks",
+  "/api/semesters/route": "/api/semesters",
+  "/api/fee-receipt/route": "/api/fee-receipt",
+  "/dashboard/page": "/dashboard",
+  "/page": "/"
+}

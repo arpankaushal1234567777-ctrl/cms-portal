@@ -1,0 +1,36 @@
+{
+  "components/MarksTable.jsx -> jspdf": {
+    "id": 5172,
+    "files": [
+      "static/chunks/164f4fb6.2c2e82e3fff55a75.js",
+      "static/chunks/195.57ae22e922a9cd0d.js"
+    ]
+  },
+  "components/MarksTable.jsx -> jspdf-autotable": {
+    "id": 7674,
+    "files": [
+      "static/chunks/164f4fb6.2c2e82e3fff55a75.js",
+      "static/chunks/195.57ae22e922a9cd0d.js",
+      "static/chunks/674.b5e293d1e288832d.js"
+    ]
+  },
+  "node_modules/jspdf/dist/jspdf.es.min.js -> canvg": {
+    "id": 1482,
+    "files": [
+      "static/chunks/bc98253f.44cacffe043e4df8.js",
+      "static/chunks/199.1638969ad07d5ef2.js"
+    ]
+  },
+  "node_modules/jspdf/dist/jspdf.es.min.js -> dompurify": {
+    "id": 1966,
+    "files": [
+      "static/chunks/966.6b40b9db026c655c.js"
+    ]
+  },
+  "node_modules/jspdf/dist/jspdf.es.min.js -> html2canvas": {
+    "id": 4264,
+    "files": [
+      "static/chunks/ad2866b8.3a53275943d3b1db.js"
+    ]
+  }
+}
