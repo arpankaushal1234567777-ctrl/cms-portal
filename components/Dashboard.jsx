@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ProfileCard from './ProfileCard';
 import SemesterSelector from './SemesterSelector';
 import MarksTable from './MarksTable';
@@ -36,6 +36,7 @@ export default function Dashboard({ initialProfile }) {
   // Background Semester Report downloading states
   const [downloadingAll, setDownloadingAll] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState('');
+  const cancelDownloadRef = useRef(false);
 
   // Initial mount: load semester lists
   useEffect(() => {
@@ -156,11 +157,26 @@ export default function Dashboard({ initialProfile }) {
       const allCoursesData = [];
 
       for (let i = 0; i < courses.length; i++) {
+        // Check for cancellation before fetching
+        if (cancelDownloadRef.current) {
+          setDownloadingAll(false);
+          setDownloadProgress('');
+          return;
+        }
+
         const c = courses[i];
         setDownloadProgress(`Fetching ${c.courseCode}... (${i + 1}/${courses.length})`);
         
         try {
           const res = await fetch(`/api/marks?semester=${selectedSemester}&course=${c.courseCode}`);
+          
+          // Check for cancellation after fetch returns
+          if (cancelDownloadRef.current) {
+            setDownloadingAll(false);
+            setDownloadProgress('');
+            return;
+          }
+
           const resData = await res.json();
           if (resData.success) {
             const actual = resData.data ? resData.data : resData;
@@ -392,9 +408,21 @@ export default function Dashboard({ initialProfile }) {
           {/* Background Semester PDF download progress card */}
           {downloadingAll && (
             <div className="glass-card animate-fade-in" style={{ padding: '12px', marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px', border: '1px solid var(--border-primary)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11.5px', color: 'var(--text-primary)', fontWeight: '500' }}>
-                <span className="spinner-border" style={{ color: 'var(--text-primary)' }} />
-                <span>Downloading Report</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11.5px', color: 'var(--text-primary)', fontWeight: '500' }}>
+                  <span className="spinner-border" style={{ color: 'var(--text-primary)' }} />
+                  <span>Downloading Report</span>
+                </div>
+                <button
+                  onClick={() => {
+                    cancelDownloadRef.current = true;
+                    setDownloadingAll(false);
+                    setDownloadProgress('');
+                  }}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--status-alert)', fontSize: '10.5px', cursor: 'pointer', padding: '2px 4px', fontWeight: '500' }}
+                >
+                  Cancel
+                </button>
               </div>
               <span style={{ fontSize: '9.5px', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>{downloadProgress}</span>
             </div>
