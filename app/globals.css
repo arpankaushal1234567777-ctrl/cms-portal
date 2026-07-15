@@ -31,7 +31,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light) {
     /* Premium Dark Theme (inspired by Linear / Vercel Obsidian) */
     --bg-primary: #09090b;
     --bg-secondary: #18181b;
@@ -53,6 +53,52 @@
     --status-active: #ffffff;
     --status-active-bg: #27272a;
   }
+}
+
+:root.dark {
+  /* Premium Dark Theme */
+  --bg-primary: #09090b;
+  --bg-secondary: #18181b;
+  --bg-card: #121214;
+  --bg-glass: rgba(18, 18, 20, 0.8);
+  
+  --border-primary: #27272a;
+  --border-secondary: #1e1e21;
+  --border-glass: rgba(255, 255, 255, 0.04);
+  
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --text-muted: #52525b;
+  
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.8);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.8);
+  
+  --status-active: #ffffff;
+  --status-active-bg: #27272a;
+}
+
+:root.light {
+  /* Premium Light Theme */
+  --bg-primary: #fafafa;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.8);
+  
+  --border-primary: #e4e4e7;
+  --border-secondary: #f4f4f5;
+  --border-glass: rgba(0, 0, 0, 0.06);
+  
+  --text-primary: #09090b;
+  --text-secondary: #71717a;
+  --text-muted: #a1a1aa;
+  
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.04);
+  
+  --status-active: #09090b;
+  --status-active-bg: #f4f4f5;
 }
 
 * {
