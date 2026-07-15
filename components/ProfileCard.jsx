@@ -11,7 +11,7 @@ export default function ProfileCard({ profile, loading }) {
             <div className="skeleton" style={{ height: '12px', width: '15%' }} />
           </div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
           {[1, 2, 3, 4].map(n => (
             <div key={n} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <div className="skeleton" style={{ height: '12px', width: '25%' }} />
@@ -59,7 +59,7 @@ export default function ProfileCard({ profile, loading }) {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '20px' }}>
         <div>
           <div style={{ color: 'var(--text-secondary)', fontSize: '11px', textTransform: 'uppercase', fontWeight: '600', letterSpacing: '0.05em', marginBottom: '4px' }}>
             Roll Number

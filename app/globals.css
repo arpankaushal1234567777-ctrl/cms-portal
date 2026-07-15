@@ -619,6 +619,27 @@ body {
     padding: 7px 4px;
     font-size: 12px;
   }
+  
+  /* Horizontal scrollable navigation on mobile/tablet */
+  .sidebar-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    background: var(--border-secondary);
+    padding: 4px;
+    border-radius: 8px;
+    gap: 4px;
+    scrollbar-width: none; /* Hide scrollbar on Firefox */
+  }
+  .sidebar-nav::-webkit-scrollbar {
+    display: none; /* Hide scrollbar on Chrome/Safari */
+  }
+  .sidebar-link {
+    width: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 8px 14px;
+    font-size: 13px;
+  }
 }
 
 /* Spinner border rotation animations */
@@ -639,4 +660,16 @@ body {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+  .navbar .container {
+    padding: 0 16px !important;
+  }
+  .navbar span[style*="uppercase"] {
+    display: none !important;
+  }
+  .navbar div[style*="gap: 16px"] {
+    gap: 8px !important;
+  }
 }
