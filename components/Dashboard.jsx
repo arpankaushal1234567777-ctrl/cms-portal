@@ -8,6 +8,7 @@ import AdmitCard from './AdmitCard';
 import FeeReceipt from './FeeReceipt';
 import ChangePassword from './ChangePassword';
 import ResultBoard from './ResultBoard';
+import PortalsHub from './PortalsHub';
 
 export default function Dashboard({ initialProfile }) {
   const [activeTab, setActiveTab] = useState('marks');
@@ -392,6 +393,15 @@ export default function Dashboard({ initialProfile }) {
               Official Results
             </button>
             <button
+              className={`sidebar-link ${activeTab === 'portals' ? 'active' : ''}`}
+              onClick={() => setActiveTab('portals')}
+            >
+              <svg style={{ width: '16px', height: '16px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622a4.5 4.5 0 01-1.242-7.244l4.5-4.5a4.5 4.5 0 016.364 6.364l-1.757 1.757m-13.35.622l13.35-13.35" />
+              </svg>
+              Portals Hub
+            </button>
+            <button
               className={`sidebar-link ${activeTab === 'settings' ? 'active' : ''}`}
               onClick={() => setActiveTab('settings')}
             >
@@ -481,6 +491,10 @@ export default function Dashboard({ initialProfile }) {
           
           {activeTab === 'results' && (
             <ResultBoard />
+          )}
+
+          {activeTab === 'portals' && (
+            <PortalsHub />
           )}
         </main>
       </div>
