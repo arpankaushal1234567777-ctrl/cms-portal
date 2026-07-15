@@ -33,6 +33,10 @@ export default function Dashboard({ initialProfile }) {
   // Registration Report downloading state
   const [downloadingReport, setDownloadingReport] = useState(false);
 
+  // Background Semester Report downloading states
+  const [downloadingAll, setDownloadingAll] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState('');
+
   // Initial mount: load semester lists
   useEffect(() => {
     const loadInitialData = async () => {
@@ -140,6 +144,181 @@ export default function Dashboard({ initialProfile }) {
     }
   };
 
+  // Download complete unified semester PDF in the background
+  const handleDownloadAllPDF = async () => {
+    if (!courses || courses.length === 0) return;
+    setDownloadingAll(true);
+    try {
+      const { jsPDF } = await import('jspdf');
+      await import('jspdf-autotable');
+
+      const doc = new jsPDF();
+      const allCoursesData = [];
+
+      for (let i = 0; i < courses.length; i++) {
+        const c = courses[i];
+        setDownloadProgress(`Fetching ${c.courseCode}... (${i + 1}/${courses.length})`);
+        
+        try {
+          const res = await fetch(`/api/marks?semester=${selectedSemester}&course=${c.courseCode}`);
+          const resData = await res.json();
+          if (resData.success) {
+            const actual = resData.data ? resData.data : resData;
+            
+            // Check if special evaluation course
+            const rawComps = actual.components || [];
+            const hasCt1 = rawComps.find(x => x.name.toUpperCase().includes('CT1'));
+            const hasCt2 = rawComps.find(x => x.name.toUpperCase().includes('CT2'));
+            const hasDha = rawComps.find(x => x.name.toUpperCase().includes('DHA'));
+            const hasCaComp = rawComps.some(x => 
+              x.name.toUpperCase().includes('CA') || 
+              x.name.toUpperCase().includes('ATT') || 
+              x.name.toUpperCase().includes('AA')
+            );
+            const isSpecial = hasCt1 && hasCt2 && hasDha && hasCaComp;
+            const targetMax = isSpecial ? 150 : 200;
+            
+            allCoursesData.push({
+              courseCode: c.courseCode,
+              courseName: c.courseName || c.courseCode,
+              components: rawComps,
+              obtainedMarks: actual.marks || [],
+              studentTotal: parseFloat(actual.total || 0),
+              studentGrade: actual.grade || 'N/A',
+              classHighest: parseFloat(actual.classStats?.highest || 0),
+              classAverage: parseFloat(actual.classStats?.average || 0),
+              targetMax,
+              isSpecial
+            });
+          }
+        } catch (e) {
+          console.error(`Failed to fetch details for ${c.courseCode}:`, e);
+        }
+      }
+
+      setDownloadProgress('Generating PDF document...');
+
+      // 2. Build Summary Cover Page
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.setTextColor(24, 24, 27);
+      doc.text('Dayalbagh Educational Institute', 14, 20);
+
+      doc.setFontSize(12);
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(113, 113, 122);
+      doc.text('Continuous Internal Evaluation Summary Report', 14, 26);
+
+      doc.setDrawColor(228, 228, 231);
+      doc.setFillColor(250, 250, 250);
+      doc.rect(14, 32, 182, 32, 'FD');
+
+      doc.setFontSize(9);
+      doc.setTextColor(113, 113, 122);
+      doc.setFont('Helvetica', 'bold');
+      doc.text('Roll Number:', 20, 39);
+      doc.text('Student Name:', 20, 45);
+      doc.text('Semester Name:', 20, 51);
+      doc.text('Generated Date:', 20, 57);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(24, 24, 27);
+      doc.text(profile?.rollNumber || 'N/A', 60, 39);
+      doc.text(profile?.name || 'N/A', 60, 45);
+      doc.text(selectedSemester ? `Semester ${selectedSemester.replace('SM', '')}` : 'N/A', 60, 51);
+      doc.text(new Date().toLocaleDateString(), 60, 57);
+
+      doc.setFontSize(11);
+      doc.setFont('Helvetica', 'bold');
+      doc.text('Course Evaluation Summary', 14, 73);
+
+      const summaryHead = ['Course Code', 'Course Title', 'Marks Obtained', 'Max Marks', 'Grade'];
+      const summaryBody = allCoursesData.map(c => [
+        c.courseCode,
+        c.courseName,
+        c.studentTotal.toString(),
+        c.targetMax.toString(),
+        c.studentGrade
+      ]);
+
+      doc.autoTable({
+        startY: 77,
+        head: [summaryHead],
+        body: summaryBody,
+        theme: 'striped',
+        headStyles: { fillColor: [24, 24, 27], textColor: [250, 250, 250], fontStyle: 'bold' }
+      });
+
+      // 3. Add Detailed Pages for each Course
+      allCoursesData.forEach(c => {
+        doc.addPage();
+
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(14);
+        doc.setTextColor(24, 24, 27);
+        doc.text(`Course Detailed Breakdown: ${c.courseCode}`, 14, 20);
+
+        doc.setFontSize(10);
+        doc.setFont('Helvetica', 'normal');
+        doc.setTextColor(113, 113, 122);
+        doc.text(c.courseName, 14, 26);
+
+        doc.setDrawColor(228, 228, 231);
+        doc.setFillColor(250, 250, 250);
+        doc.rect(14, 32, 182, 24, 'FD');
+
+        doc.setFontSize(8.5);
+        doc.setFont('Helvetica', 'bold');
+        doc.text('Your Total Score:', 20, 38);
+        doc.text('Your Grade:', 20, 44);
+        doc.text('Class Average / Highest:', 20, 50);
+
+        doc.setFont('Helvetica', 'normal');
+        doc.setTextColor(24, 24, 27);
+        doc.text(`${c.studentTotal} / ${c.targetMax}`, 65, 38);
+        doc.text(c.studentGrade, 65, 44);
+        doc.text(`${c.classAverage} / ${c.classHighest}`, 65, 50);
+
+        const detailHead = ['Evaluation Component', 'Max Marks', 'Obtained Score'];
+        const detailBody = c.components.map(comp => {
+          const matchingObtained = c.obtainedMarks.find(m => m.componentId === comp.id);
+          return [
+            comp.name,
+            comp.maxMarks.toString(),
+            matchingObtained ? matchingObtained.obtainedMarks.toString() : '-'
+          ];
+        });
+
+        detailBody.push([
+          c.isSpecial ? 'Cumulative Course Total (*Higher of CT1/CT2 selected)' : 'Cumulative Course Total',
+          c.targetMax.toString(),
+          c.studentTotal.toString()
+        ]);
+
+        doc.autoTable({
+          startY: 62,
+          head: [detailHead],
+          body: detailBody,
+          theme: 'striped',
+          headStyles: { fillColor: [63, 63, 70], textColor: [250, 250, 250], fontStyle: 'bold' },
+          didParseCell: function (data) {
+            if (data.row.index === detailBody.length - 1) {
+              data.cell.styles.fontStyle = 'bold';
+              data.cell.styles.fillColor = [244, 244, 245];
+            }
+          }
+        });
+      });
+
+      doc.save(`Semester_Report_${profile?.rollNumber || 'C CIE'}.pdf`);
+    } catch (e) {
+      console.error('Failed to generate semester PDF report:', e);
+    } finally {
+      setDownloadingAll(false);
+      setDownloadProgress('');
+    }
+  };
+
   if (initialError) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
@@ -209,6 +388,17 @@ export default function Dashboard({ initialProfile }) {
               📄 {downloadingReport ? 'Downloading...' : 'Registration Card'}
             </button>
           )}
+
+          {/* Background Semester PDF download progress card */}
+          {downloadingAll && (
+            <div className="glass-card animate-fade-in" style={{ padding: '12px', marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px', border: '1px solid var(--border-primary)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11.5px', color: 'var(--text-primary)', fontWeight: '500' }}>
+                <span className="spinner-border" style={{ color: 'var(--text-primary)' }} />
+                <span>Downloading Report</span>
+              </div>
+              <span style={{ fontSize: '9.5px', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>{downloadProgress}</span>
+            </div>
+          )}
         </aside>
 
         {/* Right Column: Main Content Panels */}
@@ -232,6 +422,9 @@ export default function Dashboard({ initialProfile }) {
                 courseCode={selectedCourse}
                 courses={courses}
                 selectedSemester={selectedSemester}
+                downloadingAll={downloadingAll}
+                downloadProgress={downloadProgress}
+                onDownloadAll={handleDownloadAllPDF}
               />
             </div>
           )}
