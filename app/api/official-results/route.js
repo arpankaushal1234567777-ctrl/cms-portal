@@ -28,24 +28,16 @@ export async function GET() {
 
     // Parse all sliders/toggles on the page
     $('.jwts_toggleContent').each((idx, contentEl) => {
-      // Find the toggle control title associated with this content box
+      // Find the subcategory folder title (e.g. "Faculty of Arts")
       const controlEl = $(contentEl).prevAll('.jwts_toggleControlContainer').first();
       let subcategory = controlEl.find('.jwts_toggleControlTitle').text().trim();
-      
-      // Clean up subcategory symbols like + or - signs
       subcategory = subcategory.replace(/^[+\-\s]+|[+\-\s]+$/g, '').trim();
 
-      // Find the main section heading (e.g. "Results for session 2025-26 Even Semester")
+      // Find the main session heading (e.g. "Results for session 2025-26 Even Semester")
       const headingEl = $(contentEl).prevAll('h3').first();
       let heading = headingEl.text().trim();
       heading = heading.replace(/^[+\-\s]+|[+\-\s]+$/g, '').trim();
 
-      // Construct category tag
-      const categoryTag = heading && subcategory 
-        ? `${heading} • ${subcategory}`
-        : heading || subcategory || 'General Announcements';
-
-      // Fetch all links inside this slider
       $(contentEl).find('a').each((i, linkEl) => {
         const href = $(linkEl).attr('href');
         const text = $(linkEl).text().replace(/\s+/g, ' ').trim();
@@ -61,14 +53,15 @@ export async function GET() {
             resultsList.push({
               title: text,
               url: absoluteUrl,
-              category: categoryTag
+              session: heading || 'General Announcements',
+              subcategory: subcategory || 'General Announcements'
             });
           }
         }
       });
     });
 
-    // Also fallback to fetch any links that are not in sliders
+    // Fallback to fetch any links that are not in sliders
     $('.item-page a').each((i, linkEl) => {
       const href = $(linkEl).attr('href');
       const text = $(linkEl).text().replace(/\s+/g, ' ').trim();
@@ -88,7 +81,8 @@ export async function GET() {
           resultsList.push({
             title: text,
             url: absoluteUrl,
-            category: heading || 'General Announcements'
+            session: heading || 'General Announcements',
+            subcategory: 'General Announcements'
           });
         }
       }
