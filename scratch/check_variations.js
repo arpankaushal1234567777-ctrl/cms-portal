@@ -1,0 +1,44 @@
+const https = require('https');
+
+const variations = [
+  'Student%20Diary%202025-26.pdf',
+  'Student_Diary_2025-26.pdf',
+  'StudentDiary2025-26.pdf',
+  'student_diary_2025-26.pdf',
+  'Student%20Diary%202024-25.pdf',
+  'Student_Diary_2024-25.pdf',
+  'StudentDiary2024-25.pdf',
+  'student_diary.pdf'
+];
+
+const paths = [
+  'https://www.dei.ac.in/files/academics/',
+  'https://www.dei.ac.in/dei/files/academics/',
+  'https://www.dei.ac.in/files/',
+  'https://www.dei.ac.in/dei/files/'
+];
+
+async function checkUrl(url) {
+  return new Promise((resolve) => {
+    https.request(url, { method: 'HEAD', rejectUnauthorized: false }, (res) => {
+      resolve(res.statusCode === 200);
+    }).on('error', () => resolve(false))
+      .end();
+  });
+}
+
+async function main() {
+  console.log('Testing url variations for Student Diary PDF...');
+  for (const path of paths) {
+    for (const file of variations) {
+      const url = `${path}${file}`;
+      const exists = await checkUrl(url);
+      if (exists) {
+        console.log(`[FOUND MATCH]: ${url}`);
+      }
+    }
+  }
+  console.log('Done testing.');
+}
+
+main();

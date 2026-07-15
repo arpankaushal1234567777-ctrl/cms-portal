@@ -2,91 +2,22 @@
 
 import { useState, useEffect } from 'react';
 
-// Curated official DEI Syllabi directory database (resolved against dei.ac.in)
+// Curated verified active DEI Syllabi directory
 const SYLLABI_DATABASE = [
-  {
-    faculty: 'Faculty of Science',
-    departments: [
-      {
-        name: 'Computer Science',
-        program: 'B.Sc. (Honours) / M.Sc. Computer Science',
-        keywords: ['computer', 'science', 'csm', 'cs'],
-        pdfUrl: 'https://www.dei.ac.in/dei/files/academics/Syllabus/Science/B.Sc-M.Sc-ComputerScience-Syllabus.pdf'
-      },
-      {
-        name: 'Mathematics',
-        program: 'B.Sc. (Honours) / M.Sc. Mathematics',
-        keywords: ['math', 'mathematics', 'mam'],
-        pdfUrl: 'https://www.dei.ac.in/dei/files/academics/Syllabus/Science/B.Sc-M.Sc-Mathematics-Syllabus.pdf'
-      },
-      {
-        name: 'Physics',
-        program: 'B.Sc. (Honours) / M.Sc. Physics',
-        keywords: ['physics', 'phm'],
-        pdfUrl: 'https://www.dei.ac.in/dei/files/academics/Syllabus/Science/B.Sc-M.Sc-Physics-Syllabus.pdf'
-      },
-      {
-        name: 'Chemistry',
-        program: 'B.Sc. (Honours) / M.Sc. Chemistry',
-        keywords: ['chemistry', 'chm'],
-        pdfUrl: 'https://www.dei.ac.in/dei/files/academics/Syllabus/Science/B.Sc-M.Sc-Chemistry-Syllabus.pdf'
-      }
-    ]
-  },
   {
     faculty: 'Faculty of Engineering',
     departments: [
       {
-        name: 'Mechanical Engineering',
-        program: 'B.Tech. Mechanical Engineering (NEP)',
-        keywords: ['mechanical', 'engineering', 'btech', 'b.tech'],
-        pdfUrl: 'https://www.dei.ac.in/dei/files/academics/Syllabus/Engineering/B.Tech-MechanicalEngineering-Syllabus.pdf'
+        name: 'B.Tech Part-Time',
+        program: 'B.Tech Part-Time Syllabus (Continuous Evaluation)',
+        keywords: ['btech', 'b.tech', 'part-time', 'engineering'],
+        pdfUrl: 'https://www.dei.ac.in/files/NAAC/Criterion1/Syllabus%20for%20all%20Programs(2017-18)/b.tec%20part%20time.pdf'
       },
       {
-        name: 'Electrical Engineering',
-        program: 'B.Tech. Electrical Engineering',
-        keywords: ['electrical', 'electronics'],
-        pdfUrl: 'https://www.dei.ac.in/dei/files/academics/Syllabus/Engineering/B.Tech-ElectricalEngineering-Syllabus.pdf'
-      },
-      {
-        name: 'Civil Engineering',
-        program: 'B.Tech. Civil Engineering',
-        keywords: ['civil'],
-        pdfUrl: 'https://www.dei.ac.in/dei/files/academics/Syllabus/Engineering/B.Tech-CivilEngineering-Syllabus.pdf'
-      },
-      {
-        name: 'Footwear Technology',
-        program: 'B.Tech. Footwear Technology (B.Voc)',
-        keywords: ['footwear', 'leather'],
-        pdfUrl: 'https://www.dei.ac.in/dei/files/academics/Syllabus/Engineering/B.Tech-FootwearTechnology-Syllabus.pdf'
-      }
-    ]
-  },
-  {
-    faculty: 'Faculty of Commerce',
-    departments: [
-      {
-        name: 'Commerce',
-        program: 'B.Com. (Honours) / M.Com. / MBA',
-        keywords: ['commerce', 'bcom', 'b.com', 'mcom', 'mba', 'management'],
-        pdfUrl: 'https://www.dei.ac.in/dei/files/academics/Syllabus/Commerce/B.Com-M.Com-MBA-Syllabus.pdf'
-      }
-    ]
-  },
-  {
-    faculty: 'Faculty of Social Sciences',
-    departments: [
-      {
-        name: 'Business Administration',
-        program: 'BBA (Honours) / MBA Business Administration',
-        keywords: ['bba', 'business', 'administration'],
-        pdfUrl: 'https://www.dei.ac.in/dei/files/academics/Syllabus/SocialSciences/BBA-MBA-Syllabus.pdf'
-      },
-      {
-        name: 'Economics',
-        program: 'B.A. (Honours) / M.A. Economics',
-        keywords: ['economics', 'eco', 'social'],
-        pdfUrl: 'https://www.dei.ac.in/dei/files/academics/Syllabus/SocialSciences/BA-MA-Economics-Syllabus.pdf'
+        name: 'B.Tech Part-Time Full',
+        program: 'B.Tech Part-Time (Complete Course Structure)',
+        keywords: ['btech', 'b.tech', 'part-time', 'mechanical', 'electrical'],
+        pdfUrl: 'https://www.dei.ac.in/files/NAAC/Criterion1/Syllabus%20for%20all%20Programs(2017-18)/b.tec%20part%20time%20FULL.pdf'
       }
     ]
   }
@@ -112,7 +43,6 @@ export default function Academics({ profile }) {
     // Scan all faculties/departments in our database
     for (const fac of SYLLABI_DATABASE) {
       for (const dept of fac.departments) {
-        // If profile details match keywords
         const isMatch = dept.keywords.some(kw => 
           progText.includes(kw) || deptText.includes(kw)
         );
@@ -124,7 +54,6 @@ export default function Academics({ profile }) {
       if (matched) break;
     }
 
-    // Default fallback to first science course if not found (or null)
     setSuggestedSyllabus(matched);
   }, [profile]);
 
@@ -135,8 +64,8 @@ export default function Academics({ profile }) {
 
   const currentFacultyData = SYLLABI_DATABASE.find(f => f.faculty === selectedFaculty);
 
-  // Embedded calendar URL (Google PDF Viewer wrapper to bypass iframe policies)
-  const calendarPdfUrl = 'https://www.dei.ac.in/dei/files/academics/Academic%20Calendar%202025-26.pdf';
+  // Verified active academic exam scheme/calendar PDF url
+  const calendarPdfUrl = 'https://www.dei.ac.in/files/notices/2025/End%20Sem%20Scheme%20(Common%20Courses)%20Dec%2025.pdf';
   const embeddedCalendarUrl = `https://docs.google.com/gview?url=${encodeURIComponent(calendarPdfUrl)}&embedded=true`;
 
   return (
@@ -148,7 +77,7 @@ export default function Academics({ profile }) {
           onClick={() => setSubTab('calendar')}
           style={{ flex: 1, justifyContent: 'center', padding: '10px 0' }}
         >
-          📅 Academic Calendar
+          📅 Academic Schedule
         </button>
         <button
           className={`sidebar-link ${subTab === 'syllabus' ? 'active' : ''}`}
@@ -164,9 +93,9 @@ export default function Academics({ profile }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div className="glass-card" style={{ padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
             <div>
-              <h2 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)' }}>General Academic Calendar 2025–26</h2>
+              <h2 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)' }}>End-Semester Examination Scheme</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginTop: '2px' }}>
-                Key dates for Odd/Even semesters, evaluation schedules, breaks, and holidays.
+                Official continuous evaluation timeline and final examination dates.
               </p>
             </div>
             <a
@@ -176,7 +105,7 @@ export default function Academics({ profile }) {
               className="btn-secondary"
               style={{ padding: '8px 16px', fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
             >
-              📥 Download PDF
+              📥 Download Scheme PDF
             </a>
           </div>
 
@@ -185,7 +114,7 @@ export default function Academics({ profile }) {
             <iframe
               src={embeddedCalendarUrl}
               style={{ width: '100%', height: '100%', border: 'none' }}
-              title="DEI Academic Calendar 2025-26"
+              title="DEI Academic Schedule"
             />
           </div>
         </div>
@@ -194,14 +123,61 @@ export default function Academics({ profile }) {
       {/* SUB-PANEL 2: COURSE SYLLABUS */}
       {subTab === 'syllabus' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          
+          {/* DEI Course Central (LMS) Suggestion Box */}
+          <div
+            className="glass-card animate-fade-in-up"
+            style={{
+              padding: '24px',
+              border: '1px solid var(--accent-cyan)',
+              background: 'rgba(34, 211, 238, 0.02)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '16px'
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <span style={{ fontSize: '10px', background: 'var(--accent-cyan)', color: '#09090b', padding: '3px 8px', borderRadius: '12px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Official LMS Directory
+              </span>
+              <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginTop: '8px' }}>
+                DEI Course Central (LMS) Portal
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '12.5px', marginTop: '4px', lineHeight: '1.4' }}>
+                Access course-specific syllabi, lecture modules, and resource materials uploaded by your professors.
+              </p>
+            </div>
+
+            <a
+              href="http://deilms.dei.ac.in/deilms/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary animate-pulse-glow"
+              style={{
+                borderColor: 'var(--accent-cyan)',
+                color: 'var(--accent-cyan)',
+                background: 'rgba(34, 211, 238, 0.05)',
+                padding: '10px 20px',
+                fontSize: '13px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontWeight: '600'
+              }}
+            >
+              🌐 Open DEI LMS
+            </a>
+          </div>
+
           {/* Auto Suggested Syllabus Box */}
           {suggestedSyllabus && (
             <div
               className="glass-card animate-fade-in-up"
               style={{
-                padding: '24px',
-                border: '1px solid var(--accent-cyan)',
-                background: 'rgba(34, 211, 238, 0.02)',
+                padding: '20px 24px',
+                border: '1px solid var(--border-primary)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -210,14 +186,11 @@ export default function Academics({ profile }) {
               }}
             >
               <div style={{ flex: 1 }}>
-                <span style={{ fontSize: '10px', background: 'var(--accent-cyan)', color: '#09090b', padding: '3px 8px', borderRadius: '12px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Matched for You
-                </span>
-                <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginTop: '8px' }}>
+                <h3 style={{ fontSize: '14.5px', fontWeight: '600', color: 'var(--text-primary)' }}>
                   {suggestedSyllabus.program}
                 </h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '12.5px', marginTop: '4px' }}>
-                  Department: <span style={{ color: 'var(--text-primary)' }}>{suggestedSyllabus.name}</span> ({suggestedSyllabus.facultyName})
+                <p style={{ color: 'var(--text-secondary)', fontSize: '12px', marginTop: '2px' }}>
+                  Faculty: <span style={{ color: 'var(--text-primary)' }}>{suggestedSyllabus.facultyName}</span>
                 </p>
               </div>
 
@@ -225,20 +198,16 @@ export default function Academics({ profile }) {
                 href={suggestedSyllabus.pdfUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-secondary animate-pulse-glow"
+                className="btn-secondary"
                 style={{
-                  borderColor: 'var(--accent-cyan)',
-                  color: 'var(--accent-cyan)',
-                  background: 'rgba(34, 211, 238, 0.05)',
-                  padding: '10px 20px',
-                  fontSize: '13px',
+                  padding: '8px 16px',
+                  fontSize: '12.5px',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  fontWeight: '600'
+                  gap: '6px'
                 }}
               >
-                📥 Download Syllabus PDF
+                📥 Download PDF
               </a>
             </div>
           )}
@@ -246,10 +215,10 @@ export default function Academics({ profile }) {
           {/* Browse General Syllabus Directory */}
           <div className="glass-card" style={{ padding: '24px' }}>
             <h3 style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '4px' }}>
-              Browse Syllabus Directory
+              Archive Syllabi Library
             </h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '12.5px', marginBottom: '20px' }}>
-              Explore and download curriculum structures across other faculties and departments of the institute.
+              Browse other published curriculum structures index papers available in our verified files directory.
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
@@ -307,10 +276,10 @@ export default function Academics({ profile }) {
                 }}
               >
                 <div>
-                  <h4 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>
+                  <h4 style={{ fontSize: '13.5px', fontWeight: '600', color: 'var(--text-primary)' }}>
                     {selectedDept.program}
                   </h4>
-                  <span style={{ fontSize: '11.5px', color: 'var(--text-secondary)' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
                     {selectedFaculty}
                   </span>
                 </div>
